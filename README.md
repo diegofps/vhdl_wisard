@@ -1,2 +1,2 @@
 # vhdl_wisard
-VHDL implementation of the WiSARD neural network
+VHDL implementation of the WiSARD neural network (Under construction)
