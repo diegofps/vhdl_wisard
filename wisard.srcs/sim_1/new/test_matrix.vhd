@@ -14,7 +14,7 @@ architecture RTL of test_matrix is
 	constant bits  : natural := 5;
 	
 	signal clk : std_logic := '0';
-	signal m  : matrix(items downto 1, bits downto 1);
+	signal m  : matrix(items downto 1, bits downto 1) := xrange(items, bits);
 	signal m2 : matrix(2 downto 1, bits+1 downto 1);
 	
 begin

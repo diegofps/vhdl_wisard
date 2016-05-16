@@ -7,7 +7,7 @@ entity test_sum is
 	-- port ( );
 end entity test_sum;
 
-architecture RTL of test_sum is
+architecture RTL of test_bytesum is
 	
 	component byte_sum
 		generic(length : natural);
