@@ -41,116 +41,73 @@ end test_ram;
 
 architecture Behavioral of test_ram is
 
-	constant bits : integer := 4;
-	constant clk_time : time := 2 ns;
+	constant address_bits : integer := 2;
+	constant storage_bits : integer := 3;
+	 
+	component ram
+		generic(data_size : natural);
+		port(clk     : in  std_logic;
+			 rst     : in  std_logic;
+			 train   : in  std_logic;
+			 address : in  std_logic_vector;
+			 dataout : out std_logic_vector(data_size downto 1));
+	end component ram;
 	
-	
-	component ram is
-	
-		generic(
-			address_bits : integer
-		);
-		
-		port(
-			clk : in std_logic;
-		  	w : in std_logic;
-		  	address : in std_logic_vector;
-		  	datain : in std_logic_vector;
-		  	dataout : out std_logic_vector);
-	  	
-	end component;
-	
-	signal clk: std_logic;
-	signal w : std_logic;
-	signal address : std_logic_vector(bits downto 1);
-	signal written : std_logic_vector(8 downto 1);
-	signal read : std_logic_vector(8 downto 1);
-	signal clock: clock := ('0', 2ns);
+	signal clk     : std_logic := '0';
+	signal rst     : std_logic := '0';
+	signal train   : std_logic := '0';
+	signal address : std_logic_vector(address_bits downto 1);
+	signal dataout : std_logic_vector(storage_bits downto 1);
 	
 begin
 
-	my_memory : ram generic map (bits) port map (clk, w, address, written, read);
+	my_memory : ram generic map (storage_bits) port map (clk, rst, train, address, dataout);
 
 	main : process is
 	begin
-
-        --cycle(clock);
-		clk <= '0'; wait for clk_time/2;
-		w <= '1';
 		
-		address <= std_logic_vector(to_unsigned(0, address'length));
-		written <= std_logic_vector(to_unsigned(0, written'length));
-		clk <= '1'; wait for clk_time/2;
-        clk <= '0'; wait for clk_time/2;
-        
-		address <= std_logic_vector(to_unsigned(1, address'length));
-        written <= std_logic_vector(to_unsigned(1, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+		reset(clk, rst);
 		
-		address <= std_logic_vector(to_unsigned(2, address'length));
-        written <= std_logic_vector(to_unsigned(2, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+		address <= std_logic_vector(to_unsigned(0, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(1, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(2, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(3, address_bits)); pulse(clk); pulse(clk);
 		
-		address <= std_logic_vector(to_unsigned(3, address'length));
-        written <= std_logic_vector(to_unsigned(3, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+        train <= '1';
+        pulse(clk);
+		pulse(clk);
+        pulse(clk);
+		pulse(clk);
+        pulse(clk);
+		pulse(clk);
+        pulse(clk);
+		pulse(clk);
+		pulse(clk);
+		pulse(clk);
+        pulse(clk);
+		pulse(clk);
 		
-		address <= std_logic_vector(to_unsigned(4, address'length));
-        written <= std_logic_vector(to_unsigned(4, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+        train <= '0';
+		address <= std_logic_vector(to_unsigned(0, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(1, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(2, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(3, address_bits)); pulse(clk); pulse(clk);
 		
-		address <= std_logic_vector(to_unsigned(5, address'length));
-        written <= std_logic_vector(to_unsigned(5, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+		train <= '1';
+		address <= std_logic_vector(to_unsigned(1, address_bits)); pulse(clk);
+		address <= std_logic_vector(to_unsigned(2, address_bits)); pulse(clk); pulse(clk);
 		
-		address <= std_logic_vector(to_unsigned(6, address'length));
-        written <= std_logic_vector(to_unsigned(6, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+        train <= '0';
+		address <= std_logic_vector(to_unsigned(0, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(1, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(2, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(3, address_bits)); pulse(clk); pulse(clk);
 		
-        address <= std_logic_vector(to_unsigned(7, address'length));
-        written <= std_logic_vector(to_unsigned(7, written'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		w <= '0';
-		
-		address <= std_logic_vector(to_unsigned(0, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(1, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(2, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(3, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(4, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(5, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(6, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
-		
-		address <= std_logic_vector(to_unsigned(7, address'length));
-		clk <= '1'; wait for clk_time/2;
-		clk <= '0'; wait for clk_time/2;
+		reset(clk, rst);
+		address <= std_logic_vector(to_unsigned(0, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(1, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(2, address_bits)); pulse(clk); pulse(clk);
+		address <= std_logic_vector(to_unsigned(3, address_bits)); pulse(clk); pulse(clk);
 		
 		wait;
 		

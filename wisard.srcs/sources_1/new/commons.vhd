@@ -67,6 +67,7 @@ package commons is
 	function randperm  (seed : POSITIVE; rows : natural; cols : natural) return matrix;
 	
 	procedure pulse(signal clk : out std_logic);
+	procedure reset(signal clk : out std_logic; signal rst : out std_logic);
 	
 end package commons;
 
@@ -129,6 +130,13 @@ package body commons is
 		clk <= '1'; wait for 1ns;
 		clk <= '0'; wait for 1ns;
 	end procedure pulse;
+	
+	procedure reset(signal clk : out std_logic; signal rst : out std_logic) is
+	begin
+		rst <= '1';
+		pulse(clk);
+		rst <= '0';
+	end procedure reset;
 	
     function log2_ceil(n : natural) return natural is
         variable current : real := real(n);

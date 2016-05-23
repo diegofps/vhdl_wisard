@@ -31,39 +31,54 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+use work.commons.all;
+
 entity ram is
 	
 	generic (
-		address_bits : integer
+		data_size : natural
 	);
 	
 	Port (
-		clk : in std_logic;
-	  	w : in std_logic;
-	  	address : in std_logic_vector(address_bits downto 1);
-	  	datain : in std_logic_vector;
-	  	dataout : out std_logic_vector
+		clk     : in  std_logic;
+		rst     : in  std_logic;
+	  	train   : in  std_logic;
+	  	address : in  std_logic_vector;
+	  	dataout : out std_logic_vector(data_size downto 1)
 	);
 	
 end ram;
 
-architecture Behavioral of ram is
+architecture RTL of ram is
 
-	type memory_type is array(2**address_bits-1 downto 0) of std_logic_vector(datain'length downto 1);
+	type memory_type is array(2**address'length-1 downto 0) of std_logic_vector(data_size downto 1);
 	signal memory : memory_type;
 	
 begin
 
 	main : process (clk) is
+		variable n1, n2 : unsigned(data_size downto 1);
+		
 	begin
 		if rising_edge(clk) then
-			if w = '1' then
-				memory(to_integer(unsigned(address))) <= datain;
-				dataout <= datain;
-			else
-				dataout <= memory(to_integer(unsigned(address)));
+			if rst = '1' then
+				for i in 0 to 2**address'length-1 loop
+					memory(i) <= std_logic_vector(to_unsigned(0, data_size));
+				end loop;
+				
+			else 
+				if train = '1' then
+					if not (unsigned(memory(to_integer(unsigned(address)))) = 2 ** data_size-1) then
+						n1 := unsigned(memory(to_integer(unsigned(address))));
+						n2 := to_unsigned(1, data_size);
+						memory(to_integer(unsigned(address))) <= std_logic_vector(n1 + n2);
+					end if;
+					dataout <= (others => 'U');
+				else
+					dataout <= memory(to_integer(unsigned(address)));
+				end if;
 			end if;
 		end if;
 	end process main;
 
-end Behavioral;
+end RTL;
