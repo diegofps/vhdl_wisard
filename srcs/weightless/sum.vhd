@@ -1,7 +1,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.commons.all;
+
+library weightless;
+use weightless.utils.all;
 
 entity sum is
 	
@@ -33,27 +35,22 @@ architecture RTL of sum is
 begin
 	
 	break_condition_1 : if num_inputs = 1 generate
-	
-        name : process (clk) is
-        begin
-            if rising_edge(clk) then
-                result <= getrow(inputs, 1);
-            end if;
-        end process name;
-        
+		result <= getrow(inputs, 1);
 	end generate break_condition_1;
 	
 	
     break_condition_2 : if num_inputs = 2 generate
     
-        name : process (clk) is
+        final_sum : process (clk) is
+        	variable n1, n2, n3 : unsigned(num_bits+1 downto 1);
         begin
             if rising_edge(clk) then
-                result <= std_logic_vector(
-                        unsigned('0' & getrow(inputs, 1)) + 
-                        unsigned('0' & getrow(inputs, 2)));
+            	n1 := unsigned('0' & getrow(inputs, 1));
+            	n2 := unsigned('0' & getrow(inputs, 2));
+            	n3 := n1 + n2;
+                result <= std_logic_vector(n3);
             end if;
-        end process name;
+        end process final_sum;
         
     end generate break_condition_2;
     

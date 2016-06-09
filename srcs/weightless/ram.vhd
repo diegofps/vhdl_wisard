@@ -21,17 +21,10 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
-use work.commons.all;
+library WEIGHTLESS;
+use WEIGHTLESS.utils.all;
 
 entity ram is
 	
@@ -73,12 +66,11 @@ begin
 						n2 := to_unsigned(1, data_size);
 						memory(to_integer(unsigned(address))) <= std_logic_vector(n1 + n2);
 					end if;
-					dataout <= (others => 'U');
-				else
-					dataout <= memory(to_integer(unsigned(address)));
 				end if;
+				dataout <= memory(to_integer(unsigned(address)));
 			end if;
 		end if;
 	end process main;
 
 end RTL;
+

@@ -1,8 +1,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.commons.all;
 
+library weightless;
+use weightless.utils.all;
 
 -- Returns the index of the highest element in input
 entity max_with_indexes is
@@ -105,7 +106,9 @@ end architecture RTL;
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.commons.all;
+
+library weightless;
+use weightless.utils.all;
 
 
 -- Returns the index of the highest element in input. 
