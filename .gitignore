@@ -1,0 +1,4 @@
+tests/vivado_project/vhdl_wisard.runs*
+tests/vivado_project/vhdl_wisard.hw*
+tests/vivado_project/vhdl_wisard.cache*
+tests/vivado_project/vhdl_wisard.sim*
